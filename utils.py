@@ -1,18 +1,36 @@
 import math
 
-def get_temp_ratio_isentropic(machin, gam):
-    # /* Utility to get the isentropic temperature ratio given the mach number*/       double number,gm1,mach1s;
-    mach1s = machin * machin
+R_u = 8.3144598#1545. # ft**2/s**2 deg Rankin
+g_0 = 9.81#32.2  # ft/s**2
+
+T_0 = 273.15#518   # deg Rankin
+p_0 = 101.297#14.7  # psi
+
+wdot_k = g_0*p_0/math.sqrt(T_0)
+
+print(wdot_k)
+
+def get_temp_ratio_isentropic(mach, gam):
+    """Utility to get the isentropic temperature ratio T/T_t given the mach number"""
+    mach1s = mach * mach
     gm1 = gam - 1.0
     number = 1.0 / (1.0 + .5 * gm1 * mach1s)
 
     return number
 
+def get_pressure_ratio_isentropic(mach, gam):
+    """Utility to get the isentropic pressure ratio p/p_t given the mach number"""
+    mach1s = mach * mach
+    gm1 = gam - 1.0
+    fac1 = 1.0 + .5 * gm1 * mach1s
+    number = math.pow(1.0 / fac1, gam / gm1)
 
-def normal_shock_total_pressure_ratio(machin, gam):
-    # // NACA 1135 - normal shock relation pt ratio - eq 97
+    return number
 
-    msq = machin * machin
+def normal_shock_total_pressure_ratio(mach, gam):
+    """NACA 1135 - normal shock relation pt ratio - eq 97"""
+
+    msq = mach * mach
     gm1 = gam - 1.0
     gp1 = gam + 1.0
 
@@ -23,10 +41,10 @@ def normal_shock_total_pressure_ratio(machin, gam):
     return number
 
 
-def normal_shock_mach_after(machin, gam):
-    # // NACA 1135 - normal shock relation  mach - eq 96... but more complicated?
+def normal_shock_mach_after(mach, gam):
+    """NACA 1135 - normal shock relation  mach - eq 96... but more complicated?"""
 
-    msq = machin * machin
+    msq = mach * mach
     gm1 = gam - 1.0
     gp1 = gam + 1.0
 
@@ -38,21 +56,22 @@ def normal_shock_mach_after(machin, gam):
 
 
 def weightflow_per_area_given_mach(mach, gascon, gam):
-    # /* Utility to get the corrected weightflow per area given the Mach number */
+    """Utility to get the corrected weightflow per area given the Mach number"""
 
     fac2 = (gam + 1.0) / (2.0 * (gam - 1.0))
     fac1 = math.pow((1.0 + .5 * (gam - 1.0) * mach * mach), fac2)
-    number = 20.78 * math.sqrt(gam / gascon) * mach / fac1
+    number = wdot_k * math.sqrt(gam / gascon) * mach / fac1
 
     return number
 
 
-def calc_gamma(temp, opt):
-    # Utility to get gamma as a function of temp
+def calc_specific_heat_ratio(temp, opt):
+    """Utility to get gamma as a function of temp"""
     a = -7.6942651e-13
     b = 1.3764661e-08
     c = -7.8185709e-05
     d = 1.436914
+    temp *= 9/5
     if opt == 0:
         number = 1.4
 
@@ -61,19 +80,10 @@ def calc_gamma(temp, opt):
 
     return number
 
-def get_pressure_ratio_isentropic(machin, gam):
-    # /* Utility to get the isentropic pressure ratio given the mach number */
-    mach1s = machin * machin
-    gm1 = gam - 1.0
-    fac1 = 1.0 + .5 * gm1 * mach1s
-    number = math.pow(1.0 / fac1, gam / gm1)
+def normal_shock_static_pressure_ratio(mach, gam):
+    """NACA 1135 - normal shock relation ps ratio - eq. 93"""
 
-    return number
-
-def normal_shock_static_pressure_ratio(machin, gam):
-    # // NACA 1135 - normal shock relation ps ratio - eq. 93
-
-    msq = machin * machin
+    msq = mach * mach
     gm1 = gam - 1.0
     gp1 = gam + 1.0
 
@@ -83,12 +93,14 @@ def normal_shock_static_pressure_ratio(machin, gam):
     return number
 
 def get_mach(sub, corair, gascon, gam):
-    # /* Utility to get the Mach number given the corrected airflow per area */
-    # /* iterate for mach number */
+    """
+    Utility to get the Mach number given the corrected airflow per area */
+    # /* iterate for mach number
+    """
 
-    a = (gam - 1) / 2.0
-    b = -(gam + 1.0) / (2.0 * (gam - 1.0))
-    k = 20.78 * math.sqrt(gam / gascon)
+    # a = (gam - 1) / 2.0
+    # b = -(gam + 1.0) / (2.0 * (gam - 1.0))
+    # k = 20.78 * math.sqrt(gam / gascon)
 
     chokair = weightflow_per_area_given_mach(1.0, gascon, gam)
     if corair > chokair:
