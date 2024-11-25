@@ -1,14 +1,13 @@
 import math
 
-R_u = 8.3144598#1545. # ft**2/s**2 deg Rankin
-g_0 = 9.81#32.2  # ft/s**2
+R_u = 847.3351394913777  # 8.3144598e-5#1545. # ft**2/s**2 deg Rankin
+g_0 = 9.81  # 32.2  # ft/s**2
 
-T_0 = 273.15#518   # deg Rankin
-p_0 = 101.297#14.7  # psi
+T_0 = 273.15  # 518   # deg Rankin
+p_0 = 101.297 * 1000  # 14.7  # psi
 
-wdot_k = g_0*p_0/math.sqrt(T_0)
+wdot_k = p_0 / math.sqrt(T_0)
 
-print(wdot_k)
 
 def get_temp_ratio_isentropic(mach, gam):
     """Utility to get the isentropic temperature ratio T/T_t given the mach number"""
@@ -18,6 +17,7 @@ def get_temp_ratio_isentropic(mach, gam):
 
     return number
 
+
 def get_pressure_ratio_isentropic(mach, gam):
     """Utility to get the isentropic pressure ratio p/p_t given the mach number"""
     mach1s = mach * mach
@@ -26,6 +26,7 @@ def get_pressure_ratio_isentropic(mach, gam):
     number = math.pow(1.0 / fac1, gam / gm1)
 
     return number
+
 
 def normal_shock_total_pressure_ratio(mach, gam):
     """NACA 1135 - normal shock relation pt ratio - eq 97"""
@@ -56,7 +57,9 @@ def normal_shock_mach_after(mach, gam):
 
 
 def weightflow_per_area_given_mach(mach, gascon, gam):
-    """Utility to get the corrected weightflow per area given the Mach number"""
+    """Utility to get the corrected weightflow per area given the Mach number
+
+    """
 
     fac2 = (gam + 1.0) / (2.0 * (gam - 1.0))
     fac1 = math.pow((1.0 + .5 * (gam - 1.0) * mach * mach), fac2)
@@ -65,20 +68,18 @@ def weightflow_per_area_given_mach(mach, gascon, gam):
     return number
 
 
-def calc_specific_heat_ratio(temp, opt):
+def calc_specific_heat_ratio(temp):
     """Utility to get gamma as a function of temp"""
     a = -7.6942651e-13
     b = 1.3764661e-08
     c = -7.8185709e-05
     d = 1.436914
-    temp *= 9/5
-    if opt == 0:
-        number = 1.4
+    temp *= 9 / 5
 
-    else:
-        number = a * temp * temp * temp + b * temp * temp + c * temp + d
+    number = a * temp * temp * temp + b * temp * temp + c * temp + d
 
     return number
+
 
 def normal_shock_static_pressure_ratio(mach, gam):
     """NACA 1135 - normal shock relation ps ratio - eq. 93"""
@@ -91,6 +92,7 @@ def normal_shock_static_pressure_ratio(mach, gam):
     number = fac2
 
     return number
+
 
 def get_mach(sub, corair, gascon, gam):
     """
