@@ -124,4 +124,13 @@ if __name__ == '__main__':
     gamma_std = 1.32
     P_fs = 101.297 * 1000
 
-    print('F', Nozzle(mwe, A_th, Arat_e, Arat_pl, P_t_chamber, T_tot, gamma_std).compute(P_fs))
+    throats = [100, 1000, 5000]
+    exhaust_ratios = [10, 50, 200]
+    print('      \t\t\t 10\t\t\t\t\t  50 \t\t\t\t 200')
+    for t in throats:
+        print(f'throat {t}:   ', end='')
+        for er in exhaust_ratios:
+            print(Nozzle(mwe, t, er, Arat_pl, P_t_chamber, T_tot, gamma_std).compute(P_fs)/1000000, end=' ')
+        print()
+
+    # print('F', Nozzle(mwe, A_th, Arat_e, Arat_pl, P_t_chamber, T_tot, gamma_std).compute(P_fs))
