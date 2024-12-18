@@ -25,7 +25,7 @@ class Nozzle:
         self.specific_heat_ratio_std = specific_heat_ratio_std
         self.temperature_total = temperature_total
         self.total_pressure_chamber = total_pressure_chamber
-        self.area_ratio_plenum = area_ratio_plenum
+        # self.area_ratio_plenum = area_ratio_plenum
         self.area_ratio_exit = area_ratio_exit
         self.area_throat = area_throat
         self.molecular_weight_exhaust = molecular_weight_exhaust
@@ -34,8 +34,8 @@ class Nozzle:
         self.radius_throat = math.sqrt(self.area_throat / math.pi)
         self.area_exit = self.area_ratio_exit * self.area_throat
         self.radius_exit = math.sqrt(self.area_exit / math.pi)
-        self.area_plenum = self.area_ratio_plenum * self.area_throat
-        self.radius_plenum = math.sqrt(self.area_plenum / math.pi)
+        # self.area_plenum = self.area_ratio_plenum * self.area_throat
+        # self.radius_plenum = math.sqrt(self.area_plenum / math.pi)
         self.specific_heat_ratio = self.specific_heat_ratio_std * calc_specific_heat_ratio(self.temperature_total) / 1.4
         # self.pt = self.total_pressure_chamber / kP_to_psi
 
